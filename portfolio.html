@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Portfolio</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	margin: 20px;
+}
+
+<!-- -->
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: left;
+}
+
+th {
+	background-color: #f4f4f4;
+}
+
+.add-trade {
+	margin-top: 10px;
+}
+<!-- -->
+    .image-right {
+      text-align: right; /* Aligns inline content, like the image, to the right */
+    }
+    .image-right img {
+      max-width: 100%;
+      height: auto; /* Ensures the image scales proportionally */
+    }
+</style>
+</head>
+<body>
+	<div class="image-right">
+		<img src="images\profile-pic.png" alt="Profile Picture" style="width: 30px;height: 30px;" >
+		<h3 style="margin-top: 5px;">John Doe</h3>
+		<p style="margin-top: 5px;">Acc- 431526****</p>
+		<p style="margin-top: 5px;">Last Login time- 3rd Mar 2024, 17:21:00</p>
+	</div>
+	<h1>Trading Portfolio</h1>
+	<table id="portfolio-table">
+		<tr>
+			<td>
+				<table>
+					<thead>
+						<tr>
+							<th>Scrip Name</th>
+							<th>Category</th>
+							<th>Quantity</th>
+							<th>Buy avg.</th>
+							<th>Buy Value</th>
+							<th>LTP</th>
+							<th>P&L</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Bain Capital</td>
+							<td>Equity</td>
+							<td>10</td><!-- Quantity -->
+							<td>150</td><!-- Buy avg -->
+							<td>809</td><!-- Buy Value -->
+							<td>755</td><!-- LTP -->
+							<td>540</td><!-- P&L -->
+							<td><img src = "images\green.png" style="height: 20px;" onclick="alert('test')"/></td>
+						</tr>
+						<tr>
+							<td>Thoma Bravo</td>
+							<td>Equity</td>
+							<td>20</td><!-- Quantity -->
+							<td>66</td><!-- Buy avg -->
+							<td>305</td><!-- Buy Value -->
+							<td>70</td><!-- LTP -->
+							<td>80</td><!-- P&L -->
+							<td><img src = "images\green.png" style="height: 20px;" onclick="alert('test')"/></td>
+						</tr>
+						<tr>
+							<td>REI AGRO LIMITED</td>
+							<td>Debt</td>
+							<td>55</td><!-- Quantity -->
+							<td>1050</td><!-- Buy avg -->
+							<td>3440</td><!-- Buy Value -->
+							<td>1100</td><!-- LTP -->
+							<td>2750</td><!-- P&L -->
+							<td><img src = "images\green.png" style="height: 20px;" onclick="alert('test')"/></td>
+						</tr>
+						<tr>
+							<td>Barrick Gold</td>
+							<td>Gold</td>
+							<td>15</td><!-- Quantity -->
+							<td>1050</td><!-- Buy avg -->
+							<td>3440</td><!-- Buy Value -->
+							<td>1100</td><!-- LTP -->
+							<td>2750</td><!-- P&L -->
+							<td><img src = "images\green.png" style="height: 20px;" onclick="alert('test')"/></td>
+						</tr>
+						<tr>
+							<td>Newmont</td>
+							<td>Gold</td>
+							<td>18</td><!-- Quantity -->
+							<td>1050</td><!-- Buy avg -->
+							<td>3440</td><!-- Buy Value -->
+							<td>1100</td><!-- LTP -->
+							<td>2750</td><!-- P&L -->
+							<td><img src = "images\green.png" style="height: 20px;" onclick="alert('test')"/></td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+				<!-- <div style="width: 50%; margin: auto;"> -->
+		<table>
+			<tr>
+				<td style="width: 200px;border: none;">
+					<div">
+			        	<canvas id="myPieChart" width="100" height="100"></canvas>
+			    	</div>
+				</td>
+				<td style="width: 900px;border: none;"></td>
+			</tr>
+		</table>
+	<!-- <div class="add-trade">
+		<button id="add-trade-btn">Add New Trade</button>
+	</div> -->
+
+	<script>
+	$(window).on('load', function() {
+	    $.ajax({
+	        url: 'https://ltc-hack-prj-12.uc.r.appspot.com/dummyResponse', // Replace with your URL
+	        type: 'POST',
+	        dataType: "jsonp",
+	        async: false, // Set to false for synchronous call
+	        success: function(data) {
+	        	alert(data);
+	            console.log('Response:', data);
+	        },
+	        error: function(xhr, status, error) {
+	        	alert(xhr + " " + status + " " + error);
+	            console.log('Error:', error);
+	        }
+	    });
+	});
+    $(document).ready(function() {
+    	
+    	
+    	
+     /*  $('#add-trade-btn').click(function() {
+        let newRow = `
+          <tr>
+            <td><input type="text" placeholder="Stock"></td>
+            <td><input type="number" placeholder="Quantity"></td>
+            <td><input type="number" placeholder="Buy Price"></td>
+            <td><input type="number" placeholder="Current Price"></td>
+          </tr>`;
+        $('#portfolio-table tbody').append(newRow);
+      }); */
+      
+   // Pie chart data
+      const data = {
+          labels: ['Equity', 'Debt', 'Gold'],
+          datasets: [{
+              label: 'My Pie Chart',
+              data: [20, 55, 25],
+              backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+              hoverOffset: 4
+          }]
+      };
+
+      // Pie chart configuration
+      const config = {
+          type: 'pie',
+          data: data
+      };
+
+      // Render pie chart
+      const ctx = $('#myPieChart')[0].getContext('2d');
+      new Chart(ctx, config);
+    });
+  </script>
+
+</body>
+</html>
